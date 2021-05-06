@@ -1,19 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:background="#292826">
         <TextView
             android:id="@+id/text_view_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/teal_700" />
-    </androidx.core.widget.NestedScrollView>
+            android:textColor="#F9D342" />
+    </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F0A07C">
+        <TextView
+            android:id="@+id/input_instructions"
+            android:text="@string/input_date"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="25sp"
+            android:layout_marginStart="45sp"
+            android:textColor="#4A274F"
+            android:textSize="18sp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/customDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25sp"
+            android:autofillHints=""
+            android:hint="@string/sample_date"
+            android:inputType="text"
+            android:outlineAmbientShadowColor="#100F0F"
+            android:outlineSpotShadowColor="#232222"
+            android:shadowColor="@color/black"
+            android:textColor="#4A274F"
+            android:textColorHighlight="#4A274F"
+            android:textColorLink="@color/black"
+            tools:ignore="TextFields" />
+
+        <Button
+            android:id="@+id/submitDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25sp"
+            android:onClick="OnCustomDateSubmit"
+            android:text="@string/dateSubmitButton" />
+    </LinearLayout>
+
+</LinearLayout>

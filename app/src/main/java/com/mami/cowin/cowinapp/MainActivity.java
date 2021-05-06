@@ -31,6 +31,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements Observer {
     private TextView textViewResult;
+    private EditText editText;
     private static final String CHANNEL_ID = "vaccine_alert";
     private static final String CHANNEL_NAME = "Vaccine Availability Alert";
     private static final String CHANNEL_DESC = "CoWin Vaccine Availability Alert";
@@ -80,4 +81,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
         textViewResult.setText(arg.toString());
     }
 
+    public void OnCustomDateSubmit(View v) {
+        editText = (EditText) findViewById(R.id.customDate);
+        String dateStr = editText.getText().toString();
+        final WorkerThread runnable = new WorkerThread(this, dateStr);
+        runnable.run();
+    }
 }
