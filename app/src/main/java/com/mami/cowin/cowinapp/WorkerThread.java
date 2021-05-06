@@ -59,16 +59,20 @@ public class WorkerThread implements Runnable {
         final Call<Centers> call = jsonPlaceHolderApi.getAppointments("395", dateStr);
 
         call.enqueue(new Callback<Centers>() {
+            final String lastUpdatedTime = new StringBuilder("Last Updated Time: ")
+                    .append(LocalDateTime.now().toString()).append("\n").toString();
             @Override
             public void onResponse(Call<Centers> call, Response<Centers> response) {
                 if (!response.isSuccessful()) {
-                    ObservableObject.getInstance().updateValue("Code: " + response.code());
-                    Log.e(TAG, "response unsuccessfully executed with response code: " + response.code());
+                    StringBuilder sb = new StringBuilder(lastUpdatedTime);
+                    sb.append("response unsuccessfully executed with response code: ").append(response.code());
+                    displayNotification(response.code());
+                    ObservableObject.getInstance().updateValue(sb.toString());
+                    Log.e(TAG, sb.toString());
                     return;
                 }
                 final Centers centers = response.body();
-                final StringBuilder sb = new StringBuilder("");
-                sb.append("Last Updated Time: ").append(LocalDateTime.now().toString());
+                final StringBuilder sb = new StringBuilder(lastUpdatedTime);
                 List<String> centers18Plus = findVaccineAvailabilityData(centers, 18);
                 sb.append(PLUS_18).append("\n");
                 sb.append(centers18Plus.toString()).append("\n");
@@ -83,6 +87,7 @@ public class WorkerThread implements Runnable {
             @Override
             public void onFailure(Call<Centers> call, Throwable t) {
                 ObservableObject.getInstance().updateValue(t.getMessage());
+                Log.e(TAG, t.getMessage(), t);
             }
         });
         Log.d(TAG, "HTTP call complete");
@@ -110,6 +115,21 @@ public class WorkerThread implements Runnable {
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("Vaccine Available")
                 .setContentText("18 = " + (size18 - 1) + ", \n" + "45 = " + (size45 - 1))
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setSound(alarmSound);
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        notificationManagerCompat.notify(1, builder.build());
+        Log.d(TAG, "Notification Displayed");
+    }
+
+    private void displayNotification(int responseCode) {
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALL);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle("CoWin API Unavailable")
+                .setContentText("Response Code: " + responseCode)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setSound(alarmSound);
